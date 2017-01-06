@@ -1,4 +1,9 @@
+getQuote();
 document.getElementById('quote-btn').onclick = getQuote;
+document.getElementById('tweet-btn').onclick = tweetQuote;
+
+var quote;
+var author;
 
 function getQuote() {
     var xhr = new XMLHttpRequest();
@@ -9,10 +14,22 @@ function getQuote() {
     xhr.onload = function() {
         if (xhr.status === 200) {
             var data = JSON.parse(xhr.responseText);
-            document.getElementById('random-quote').innerHTML = data.quote + '\n' + data.author;
+            quote = data.quote;
+            author = data.author;
+            var newCite = document.createElement('cite');
+            newCite.innerHTML = author;
+            document.getElementById('random-quote').innerHTML = quote;
+            document.getElementById('random-quote').appendChild(newCite);
         } else {
             console.log('Error occured: ' + xhr.status);
         }
     };
     xhr.send();
+}
+
+function tweetQuote() {
+    var tweet = quote;
+    tweet = tweet + ' - ' + author + ' ' + '#randomQuoteMachine';
+    var twitterLink = 'http://twitter.com/home?status=' + encodeURIComponent(tweet);
+    window.open(twitterLink, '_blank');
 }
